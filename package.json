@@ -30,7 +30,9 @@
     "add:admin": "node -r ./server/script/preflight ./server/script/addAdmin.js",
     "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
-    "start": "node -r ./server/script/preflight ./server"
+    "start": "node -r ./server/script/preflight ./server",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "auto-bind": "^1.2.0",
@@ -120,7 +122,8 @@
     "vuex-module": "^0.4.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
-    "yup": "^0.24.1"
+    "yup": "^0.24.1",
+    "snyk": "^1.83.0"
   },
   "devDependencies": {
     "babel-polyfill": "^6.26.0",
@@ -154,5 +157,6 @@
   "engines": {
     "node": ">= 8.8.0",
     "npm": ">= 5.4.2"
-  }
+  },
+  "snyk": true
 }
