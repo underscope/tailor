@@ -47,6 +47,7 @@ export default {
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
+    ...mapActions({ getSchemas: 'fetch' }, 'schemas'),
     ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupCommentsApi: 'setBaseUrl' }, 'comments'),
@@ -63,14 +64,18 @@ export default {
     this.setupRevisionApi(`/courses/${courseId}/revisions`);
     this.setupTesApi(`/courses/${courseId}/tes`);
     if (!this.course) this.getCourse(courseId);
-    return Promise.join(this.getActivities(), Promise.delay(500)).then(() => {
-      this.showLoader = false;
-      let activities = filter(this.activities, { parentId: null });
-      activities = sortBy(activities, 'position');
-      if (!existingSelection && activities.length) {
-        this.resetActivityFocus(activities[0]._cid);
-      }
-    });
+    return Promise.join(
+      this.getSchemas(),
+      this.getActivities(),
+      Promise.delay(500))
+        .then(() => {
+          this.showLoader = false;
+          let activities = filter(this.activities, { parentId: null });
+          activities = sortBy(activities, 'position');
+          if (!existingSelection && activities.length) {
+            this.resetActivityFocus(activities[0]._cid);
+          }
+        });
   }
 };
 </script>

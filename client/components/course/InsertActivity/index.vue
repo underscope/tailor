@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import { getLevel } from 'shared/activities';
 import { getOutlineChildren, getParent } from 'utils/activity';
 import { mapActions, mapGetters } from 'vuex-module';
 import ActivityBrowser from 'components/common/ActivityBrowser';
@@ -55,6 +54,7 @@ export default {
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters(['structure'], 'course'),
+    ...mapGetters(['getLevel'], 'schema'),
     supportedLevels() {
       if (!this.parent) return filter(this.structure, { level: 1 });
       const grandParent = getParent(this.activities, this.parent);
@@ -91,7 +91,7 @@ export default {
       this.hide();
     },
     isSameLevel(activity) {
-      return getLevel(activity.type).level === getLevel(this.parent.type).level;
+      return this.getLevel(activity.type).level === this.getLevel(this.parent.type).level;
     },
     resolveParent(activity) {
       return this.isSameLevel(activity) ? this.parent.parentId : this.parent.id;

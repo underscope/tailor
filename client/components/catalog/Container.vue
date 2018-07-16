@@ -53,10 +53,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch'], 'courses'),
+    ...mapActions({ getCourses: 'fetch' }, 'courses'),
+    ...mapActions({ getSchemas: 'fetch' }, 'schemas'),
     ...mapMutations(['setSearch'], 'courses'),
     loadMore() {
-      return this.fetch().then(() => {
+      return this.getCourses().then(() => {
         if (!isEmpty(this.courses)) this.loaderState.loaded();
         if (!this.hasMoreResults) this.loaderState.complete();
       });
@@ -64,12 +65,15 @@ export default {
     load(query) {
       this.loaderState.loaded();
       this.loaderState.complete();
-      return Promise.join(this.fetch({ reset: true }), Promise.delay(500))
-        .then(() => {
-          this.loaderState.reset();
-          if (!isEmpty(this.courses)) this.loaderState.loaded();
-          if (!this.hasMoreResults) this.loaderState.complete();
-        });
+      return Promise.join(
+        this.getSchemas(),
+        this.getCourses({ reset: true }),
+        Promise.delay(500))
+          .then(() => {
+            this.loaderState.reset();
+            if (!isEmpty(this.courses)) this.loaderState.loaded();
+            if (!this.hasMoreResults) this.loaderState.complete();
+          });
     },
     search(query) {
       this.setSearch(query);

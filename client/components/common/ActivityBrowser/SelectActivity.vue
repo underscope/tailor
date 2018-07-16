@@ -31,7 +31,7 @@
 
 <script>
 import { getAncestors } from 'client/utils/activity';
-import { getSchemaId } from 'shared/activities';
+import { mapGetters } from 'vuex-module';
 import activityApi from 'client/api/activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
@@ -82,12 +82,13 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['getSchemaId'], 'schemas'),
     currentLevel() {
       return this.getChildren(this.parent);
     },
     isCompatibleSchema() {
       if (!this.selectableLevels.length) return true;
-      const schema = getSchemaId(first(this.selectableLevels).type);
+      const schema = this.getSchemaId(first(this.selectableLevels).type);
       return schema === this.repository.schema;
     }
   },

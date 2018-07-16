@@ -6,7 +6,6 @@ import {
   getAncestors as getParents
 } from 'utils/activity.js';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 import request from '../../api/request';
 import VuexCollection from '../helpers/collection.js';
 
@@ -40,6 +39,7 @@ getter(function getLineage() {
 });
 
 getter(function getExamObjectives() {
+  const getLevel = this.getters['schemas/getLevel'];
   const getObjectives = activity => {
     const config = getLevel(activity.type);
     const objectiveTypes = get(config, 'exams.objectives');

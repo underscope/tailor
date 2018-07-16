@@ -68,7 +68,6 @@
 
 <script>
 import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
-import { getLevel } from 'shared/activities';
 import { mapGetters, mapMutations } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
@@ -120,6 +119,7 @@ export default {
   },
   computed: {
     ...mapGetters(['getExamObjectives'], 'activities'),
+    ...mapGetters(['getLevel'], 'schemas'),
     schema() {
       return schemas[this.element.data.type] || {};
     },
@@ -141,7 +141,7 @@ export default {
     examObjectiveLabel() {
       if (isEmpty(this.examObjectives)) return '';
       const types = uniq(map(this.examObjectives, 'type'));
-      const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
+      const label = types.length > 1 ? 'Objective' : this.getLevel(types[0]).label;
       return `Link ${label}`;
     }
   },

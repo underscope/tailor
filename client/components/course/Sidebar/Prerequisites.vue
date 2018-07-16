@@ -21,7 +21,6 @@
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 import includes from 'lodash/includes';
 import intersectionWith from 'lodash/intersectionWith';
 import isEmpty from 'lodash/isEmpty';
@@ -39,10 +38,11 @@ export default {
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
     ...mapGetters(['getLineage'], 'activities'),
+    ...mapGetters(['getLevel'], 'schemas'),
     options() {
       const activities = without(this.activities, this.activity);
       const lineage = this.getLineage(this.activity);
-      const isOutlineItem = it => getLevel(it.type);
+      const isOutlineItem = it => this.getLevel(it.type);
       const isInsideLinenage = it => includes(lineage, it);
       return filter(activities, it => {
         return isOutlineItem(it) &&

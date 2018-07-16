@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { getObjectives } from 'shared/activities';
+import { mapGetters } from 'vuex-module';
 import Acronym from 'components/common/Acronym';
 import get from 'lodash/get';
 import map from 'lodash/map';
@@ -32,6 +32,7 @@ import truncate from 'truncate';
 export default {
   props: ['course'],
   computed: {
+    ...mapGetters(['getObjectives'], 'schemas'),
     name() {
       return truncate(this.course.name, 75);
     },
@@ -39,7 +40,7 @@ export default {
       return truncate(this.course.description, 180);
     },
     objectiveLabel() {
-      const objectives = map(getObjectives(this.course.schema), 'label');
+      const objectives = map(this.getObjectives(this.course.schema), 'label');
       return objectives.length > 1 ? 'Objectives' : pluralize(objectives[0]);
     },
     assessments() {

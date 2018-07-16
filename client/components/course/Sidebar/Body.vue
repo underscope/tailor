@@ -35,7 +35,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import Discussion from './Discussion';
 import fecha from 'fecha';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Meta from 'components/common/Meta';
@@ -49,8 +48,9 @@ export default {
   },
   computed: {
     ...mapGetters(['activity'], 'course'),
+    ...mapGetters(['getLevel'], 'schemas'),
     config() {
-      return getLevel(this.activity.type) || {};
+      return this.getLevel(this.activity.type) || {};
     },
     publishStatus() {
       let { publishedAt } = this.activity;

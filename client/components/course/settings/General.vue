@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import { getRepositoryMeta } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 import api from '../../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
@@ -43,6 +42,7 @@ export default {
   },
   computed: {
     ...mapGetters(['course'], 'course'),
+    ...mapGetters(['getRepositoryMeta'], 'schemas'),
     requiredData() {
       return [{
         key: 'name',
@@ -59,7 +59,7 @@ export default {
       }];
     },
     metadata() {
-      return getRepositoryMeta(this.course);
+      return this.getRepositoryMeta(this.course);
     }
   },
   methods: {

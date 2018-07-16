@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import * as config from 'shared/activities';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
@@ -44,15 +43,16 @@ export default {
     ...mapGetters(['activities']),
     ...mapGetters(['focusedElement', 'activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course'], 'course'),
+    ...mapGetters(['hasAssessments', 'hasExams', 'getSupportedContainers'], 'schemas'),
     showAssessments() {
-      return config.hasAssessments(this.activity.type);
+      return this.hasAssessments(this.activity.type);
     },
     showExams() {
-      return config.hasExams(this.activity.type);
+      return this.hasExams(this.activity.type);
     },
     containerConfigs() {
       if (!this.activity) return [];
-      return config.getSupportedContainers(this.activity.type);
+      return this.getSupportedContainers(this.activity.type);
     }
   },
   methods: {
@@ -60,6 +60,7 @@ export default {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
+    ...mapActions({ getSchemas: 'fetch' }, 'schemas'),
     ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
     getContainerConfig(type) {
@@ -95,6 +96,7 @@ export default {
     this.setupTesApi(`${baseUrl}/tes`);
     if (!this.course) this.getCourse(courseId);
     Promise.join(
+      this.getSchemas(),
       this.getActivities(),
       this.getTeachingElements({ activityId, parentId: activityId }),
       Promise.delay(700)

@@ -1,8 +1,10 @@
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 import { lower } from 'to-case';
 import reduce from 'lodash/reduce';
 import { typeInfo } from './assessment';
+import store from '../store';
+
+const getLevel = store.getters['schemas/getLevel'];
 
 const describe = {
   'COURSE': describeCourseRevision,

@@ -1,7 +1,6 @@
 import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import { getOutlineLevels } from 'shared/activities';
 import values from 'lodash/values';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
@@ -24,6 +23,7 @@ getter(function course() {
 });
 
 getter(function structure() {
+  const getOutlineLevels = this.getters['schemas/getOutlineLevels'];
   const { route } = this.rootState;
   const { courses } = this.rootGetters;
   if (!route.fullPath.match(COURSE_ROUTE)) return [];

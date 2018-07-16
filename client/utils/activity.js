@@ -1,4 +1,3 @@
-import { getLevel } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -14,6 +13,7 @@ export function getChildren(activities, parentId) {
 }
 
 export function getOutlineChildren(activities, parentId) {
+  const getLevel = this.getters['schemas/getLevel'];
   const children = getChildren(activities, parentId);
   if (!parentId || !children.length) return children;
   const types = getLevel(find(activities, { id: parentId }).type).subLevels;

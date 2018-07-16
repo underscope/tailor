@@ -20,7 +20,7 @@
               <multiselect
                 v-model="schema"
                 v-validate="'required'"
-                :options="schemas"
+                :options="getSchemas"
                 :searchable="false"
                 label="name"
                 value="id"
@@ -75,7 +75,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import { SCHEMAS } from 'shared/activities';
 import { withValidation } from 'utils/validation';
 
 import CircularProgress from 'components/common/CircularProgress';
@@ -98,11 +97,9 @@ export default {
   data: getDefaultData,
   computed: {
     ...mapGetters(['isAdmin']),
+    ...mapGetters(['getSchemas'], 'schemas'),
     showCreateButton() {
       return this.isAdmin;
-    },
-    schemas() {
-      return SCHEMAS;
     }
   },
   methods: {

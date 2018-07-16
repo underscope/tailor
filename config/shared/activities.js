@@ -17,7 +17,7 @@ if (!process.env.ENABLE_DEFAULT_SCHEMA && !isEmpty(customConfiguration)) {
   defaultConfiguration.SCHEMAS = [];
 }
 
-const { SCHEMAS } = mergeConfig(defaultConfiguration, customConfiguration);
+let { SCHEMAS } = mergeConfig(defaultConfiguration, customConfiguration);
 parseSchemas(SCHEMAS);
 
 module.exports = {
@@ -35,12 +35,15 @@ module.exports = {
   },
   getSupportedContainers,
   hasAssessments: level => getLevel(level).hasAssessments,
-  hasExams: level => getLevel(level).hasExams
+  hasExams: level => getLevel(level).hasExams,
+  loadRemoteSchemas
 };
 
 function getSchema(id) {
   const schema = find(SCHEMAS, { id });
-  if (!schema) throw new Error('Schema does not exist!');
+  if (!schema) {
+    throw new Error('Schema does not exist!');
+  }
   return schema;
 }
 
@@ -81,4 +84,10 @@ function getRepositoryMeta(repository) {
     let value = get(repository, `data.${it.key}`);
     return { ...it, value };
   });
+}
+
+function loadRemoteSchemas(schemas) {
+  const isWebpack = !!arguments.length;
+  if (!isWebpack) return;
+  SCHEMAS = schemas;
 }

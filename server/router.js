@@ -7,6 +7,7 @@ const courseRouter = require('./course').router;
 const revisionRouter = require('./revision').router;
 const teRouter = require('./teaching-element').router;
 const userRouter = require('./user').router;
+const schemaRouter = require('./schema').router;
 
 const router = express.Router();
 router.use(processBody);
@@ -16,6 +17,7 @@ router.use('/', commentRouter);
 router.use('/', teRouter);
 router.use('/', revisionRouter);
 router.use('/', userRouter);
+router.use('/', schemaRouter);
 
 module.exports = router;
 

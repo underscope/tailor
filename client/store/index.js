@@ -9,6 +9,7 @@ import course from './modules/course';
 import courses from './modules/courses';
 import editor from './modules/editor';
 import revisions from './modules/revisions';
+import schema from './modules/schemas';
 import tes from './modules/tes';
 
 import plugins from './plugins';
@@ -27,6 +28,7 @@ const modules = {
   courses,
   editor,
   revisions,
+  schema,
   tes
 };
 
