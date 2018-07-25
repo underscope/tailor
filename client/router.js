@@ -15,6 +15,7 @@ import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
 import TreeView from './components/course/TreeView';
 import UserManagement from './components/course/settings/UserManagement';
+import SchemaEditor from './components/schema';
 
 Vue.use(Router);
 
@@ -58,6 +59,11 @@ let router = new Router({
     path: '/course/:courseId/editor/:activityId',
     name: 'editor',
     component: Editor,
+    meta: { auth: true }
+  }, {
+    path: '/schema',
+    name: 'schema',
+    component: SchemaEditor,
     meta: { auth: true }
   }, {
     path: '/',

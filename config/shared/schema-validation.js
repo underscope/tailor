@@ -20,7 +20,8 @@ const schema = yup.object().shape({
     level: yup.number().integer().min(1).max(10).required(),
     type: activityType.required(),
     label: yup.string().min(2).max(100).required(),
-    color: yup.string().matches(/^#(?:[0-9a-fA-F]{3}){1,2}$/).required(),
+    color: yup.string().matches(/^#(?:[0-9a-fA-F]{3}){1,2}$/).required()
+      .meta({ inputType: 'color' }),
     subLevels: yup.array().of(activityType),
     hasPrerequisites: yup.boolean(),
     isObjective: yup.boolean(),
@@ -41,11 +42,14 @@ const schema = yup.object().shape({
 
 const schemas = yup.array().of(schema).min(1);
 
-module.exports = function (config) {
-  try {
-    schemas.validateSync(config);
-  } catch (err) {
-    console.error('Invalid schema config!', err.message);
-    throw err;
+module.exports = {
+  schemaDesign: schemas,
+  validate: function (config) {
+    try {
+      schemas.validateSync(config);
+    } catch (err) {
+      console.error('Invalid schema config!', err.message);
+      throw err;
+    }
   }
 };

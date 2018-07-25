@@ -21,6 +21,7 @@ Vue.use(VeeValidate, {
   delay: 700,
   fieldsBagName: 'vFields',
   errorBagName: 'vErrors',
+  strict: false,
   inject: false
 });
 

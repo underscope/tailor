@@ -4,7 +4,7 @@ const find = require('lodash/find');
 const get = require('lodash/get');
 const map = require('lodash/map');
 const transform = require('lodash/transform');
-const validate = require('./schema-validation');
+const { validate } = require('./schema-validation');
 
 // Validate schemas
 // Prefix activity types with schema id; SCHEMA_ID/TYPE

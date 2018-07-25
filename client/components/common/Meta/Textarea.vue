@@ -14,6 +14,7 @@
         :placeholder="meta.placeholder"
         @keydown.enter="onEnter"
         @keydown.esc="editing = false"
+        @input="externValidate"
         class="form-control">
       </textarea>
       <div :style="previewStyle" @mousedown.stop="focusTextarea" class="content">
@@ -28,13 +29,13 @@
 import { withValidation } from 'utils/validation';
 
 export default {
-  mixins: [withValidation()],
+  mixins: [withValidation({ inherit: true })],
   name: 'multiline-input',
   props: ['meta', 'min-height'],
   data() {
     return {
-      value: this.meta.value,
-      editing: false
+      editing: false,
+      value: this.meta.value
     };
   },
   computed: {
@@ -62,6 +63,11 @@ export default {
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
       });
+    },
+    externValidate() {
+      if (!this.meta.validate) {
+        this.$emit('validate', this.meta.key, this.value);
+      }
     }
   }
 };

@@ -54,7 +54,7 @@ export default {
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters(['structure'], 'course'),
-    ...mapGetters(['getLevel'], 'schema'),
+    ...mapGetters(['getLevel'], 'schemas'),
     supportedLevels() {
       if (!this.parent) return filter(this.structure, { level: 1 });
       const grandParent = getParent(this.activities, this.parent);

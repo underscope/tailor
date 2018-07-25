@@ -2,6 +2,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
+import store from '../store';
 
 export function getParent(activities, activity) {
   const id = get(activity, 'parentId', null);
@@ -13,7 +14,7 @@ export function getChildren(activities, parentId) {
 }
 
 export function getOutlineChildren(activities, parentId) {
-  const getLevel = this.getters['schemas/getLevel'];
+  const getLevel = store.getters['schemas/getLevel'];
   const children = getChildren(activities, parentId);
   if (!parentId || !children.length) return children;
   const types = getLevel(find(activities, { id: parentId }).type).subLevels;

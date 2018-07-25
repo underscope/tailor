@@ -2,7 +2,8 @@
   <component
     :is="resolveComponent(meta.type)"
     :meta="meta"
-    @update="(key, value) => $emit('update', key, value)">
+    @update="(key, value) => $emit('update', key, value)"
+    @validate="(key, value) => $emit('validate', key, value)">
   </component>
 </template>
 

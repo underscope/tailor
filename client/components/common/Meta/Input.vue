@@ -14,6 +14,7 @@
         :ref="meta.key"
         :name="meta.key"
         :placeholder="meta.placeholder"
+        @input="externValidate"
         @keyup.enter="focusoutInput"
         class="form-control">
       <span class="help-block">{{ vErrors.first(meta.key) }}</span>
@@ -28,13 +29,13 @@
 import { withValidation } from 'utils/validation';
 
 export default {
-  mixins: [withValidation()],
+  mixins: [withValidation({ inherit: true })],
   name: 'line-input',
   props: ['meta'],
   data() {
     return {
-      value: this.meta.value,
-      editing: false
+      editing: this.meta.hasError,
+      value: this.meta.value
     };
   },
   methods: {
@@ -44,12 +45,20 @@ export default {
     },
     focusoutInput() {
       this.$validator.validate(this.meta.key).then(result => {
-        if (!result) return;
+        if (!result || this.vErrors.first(this.meta.key)) return;
         this.editing = false;
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
       });
+    },
+    externValidate() {
+      if (!this.meta.validate) {
+        this.$emit('validate', this.meta.key, this.value);
+      }
     }
+  },
+  updated() {
+    if (this.meta.hasError) this.editing = true;
   }
 };
 </script>
