@@ -22,6 +22,9 @@ export default {
   props: ['meta'],
   data() {
     return { value: this.meta.value };
+  },
+  clearValue() {
+    this.value = false;
   }
 };
 </script>

@@ -1,31 +1,41 @@
 <template>
   <div class="schemas-container">
     <bottom-popup ref="popup">
-      <span duration:="3" class="bottom-popup">
+      <span duration:="5" class="bottom-popup">
         {{ this.errorMessage }}
       </span>
     </bottom-popup>
     <circular-progress v-if="showLoader" />
     <div v-else class="schemas">
       <div class="outline">
-        <schema
-          v-for="(schema, index) in getSchemas"
-          v-if="schema"
-          :key="index"
+        <div class="schema-outline">
+          <schema
+            v-for="(schema, index) in getSchemas"
+            v-if="schema"
+            :key="index"
+            :schema-exists="schemaExists"
+            :path="String(index)"
+            :schema="schema"
+            :current-selected="currentSelected"
+            @create="create"
+            @error="showError"
+            @focus="setCurrentSelected"
+            class="schema"
+          />
+        </div>
+        <create-button
+          :schemas="this.schemas"
           :schema-exists="schemaExists"
-          :path="String(index)"
-          :design="subtype"
-          :schema="schema"
-          :current-selected="currentSelected"
-          @create="createSchema"
-          @focus="setCurrentSelected"
-        >
-        </schema>
+          @create="create"
+          @error="showError"
+        />
       </div>
       <sidebar 
         :schema-exists="schemaExists"
         :current-selected="currentSelected"
-        @save="update"
+        @update="update"
+        @remove="remove"
+        @error="showError"
       />
     </div>
   </div>
@@ -37,20 +47,23 @@ import { mapActions } from 'vuex-module';
 import Promise from 'bluebird';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
+import set from 'lodash/set';
+import join from 'lodash/join';
+import unset from 'lodash/unset';
+import toPath from 'lodash/toPath';
 import isUndefined from 'lodash/isUndefined';
 import dropRight from 'lodash/dropRight';
 import cloneDeep from 'lodash/cloneDeep';
-import toPath from 'lodash/toPath';
-import design, { getSubtypes, reach } from 'utils/schemaDesign.js';
+import { reach } from 'utils/schemaDesign.js';
 import CircularProgress from 'components/common/CircularProgress';
 import BottomPopup from 'components/common/BottomPopup';
+import CreateButton from './Schema/CreateButton';
 import Schema from './Schema';
 import Sidebar from './Sidebar';
 
 export default {
   data() {
     return {
-      design,
       showLoader: true,
       schemas: [],
       remoteSchemas: [],
@@ -60,43 +73,52 @@ export default {
   },
   computed: {
     // ...mapGetters({ remoteSchemas: 'getSchemas' }, 'schemas'),
-    subtype() {
-      return getSubtypes(this.design)[0];
-    },
     schemaExists() {
       const schemas = ([...this.remoteSchemas, ...this.schemas]);
       return !isEmpty(schemas) && !schemas.every(isUndefined);
     },
     getSchemas() {
-      if (!this.schemaExists) return [{}];
       return this.schemas;
     },
   },
   methods: {
     ...mapActions({ fetchSchemas: 'fetch' }, 'schemas'),
-    createSchema(schema) {
-      const idExists = !!this.getSchemas.find(sch => (sch.id === schema.id));
-      const errorMessage = `Schema with id: ${schema.id} already exists`;
-      if (idExists) return this.errorPopup(errorMessage);
-      this.schemas.push(schema);
-      const currentIndex = this.getSchemas.indexOf(schema);
-      this.setCurrentSelected(String(currentIndex));
+    create(parentPath, item) {
+      let parent = get(this.schemas, parentPath);
+      if (!parent && !isEmpty(parentPath)) {
+        set(this.schemas, parentPath, []);
+        parent = get(this.schemas, parentPath);
+      } else if (isEmpty(parentPath)) {
+        parent = this.schemas;
+      }
+      const index = parent.length;
+      const path = [...toPath(parentPath), index];
+      parent.push(item);
+      this.schemas = cloneDeep(this.schemas);
+      this.setCurrentSelected(path);
+    },
+    update(path, item) {
+      const schemas = cloneDeep(this.schemas);
+      set(schemas, path, item);
+      this.schemas = schemas;
+    },
+    remove(path) {
+      const schemas = cloneDeep(this.schemas);
+      unset(schemas, path);
+      this.schemas = schemas;
     },
     showError(message) {
       this.errorMessage = message;
       this.$refs.popup.show();
     },
-    update(updater) {
-      updater(this.schemas);
-      this.schemas = cloneDeep(this.schemas);
-    },
     setCurrentSelected(path) {
       const parentPath = dropRight(toPath(path));
+      path = join(toPath(path), '.');
       this.currentSelected = {
         path,
         value: get(this.getSchemas, path),
-        design: reach(design, path),
-        parentRef: get(this.getSchemas, parentPath) || this.getSchemas
+        design: reach(path),
+        parent: get(this.getSchemas, parentPath, this.getSchemas)
       };
     }
   },
@@ -113,7 +135,8 @@ export default {
     Schema,
     Sidebar,
     CircularProgress,
-    BottomPopup
+    BottomPopup,
+    CreateButton
   },
 };
 </script>
@@ -145,6 +168,10 @@ export default {
   position: relative;
   height: 100%;
   padding-right: 420px;
+
+    .schema-outline /deep/ > :not(:last-child) {
+      margin-bottom: 16px;
+    }
   }
 
   .outline {

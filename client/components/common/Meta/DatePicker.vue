@@ -26,6 +26,11 @@ export default {
       return this.meta.type.toLowerCase();
     }
   },
+  methods: {
+    clearValue() {
+      this.value = '#FFFFFF';
+    }
+  },
   components: { Datetime }
 };
 </script>

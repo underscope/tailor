@@ -82,6 +82,9 @@ export default {
     },
     isEqualColor(color1 = '', color2 = '') {
       return color1.trim().toLowerCase() === color2.trim().toLowerCase();
+    },
+    clearValue() {
+      this.value = '#FFFFFF';
     }
   },
   components: { ColorInput }

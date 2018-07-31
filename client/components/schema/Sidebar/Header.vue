@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div @click.stop="$emit('remove')" class="pull-right">
+    <div @click.stop="$emit('delete')" class="pull-right">
       <div class="btn-delete">
         <span class="mdi mdi-delete"></span>
       </div>
@@ -10,11 +10,6 @@
     </button>
   </div>
 </template>
-
-<script>
-export default {
-};
-</script>
 
 <style lang="scss" scoped>
 .header {

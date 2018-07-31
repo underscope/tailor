@@ -35,7 +35,7 @@ export default {
   .popup {
     display: inline-block;
     position: fixed;
-    z-index: 100;
+    z-index: 1100;
     left: 50%;
     transform: translate(-50%, 0);
     bottom: 10%;

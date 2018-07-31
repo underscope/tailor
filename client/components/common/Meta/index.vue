@@ -3,11 +3,14 @@
     :is="resolveComponent(meta.type)"
     :meta="meta"
     @update="(key, value) => $emit('update', key, value)"
-    @validate="(key, value) => $emit('validate', key, value)">
+    @input="(key, value) => $emit('input', key, value)"
+    ref="component">
   </component>
 </template>
 
 <script>
+import isFunction from 'lodash/isFunction';
+import keys from 'lodash/keys';
 import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
 import DatePicker from './DatePicker';
@@ -34,8 +37,14 @@ export default {
   methods: {
     resolveComponent(type = '') {
       return META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
+    },
+    clearValue() {
+      const clear = this.$refs.component.clearValue;
+      if (isFunction(clear)) clear();
     }
   },
   components
 };
+
+export const metaTypes = keys(META_TYPES);
 </script>

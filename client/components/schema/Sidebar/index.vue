@@ -1,29 +1,31 @@
 <template>
   <div class="schema-sidebar">
-    <div v-if="schemaExists && isSelected">
+    <div v-if="schemaExists && !selectedIsCollection">
       <sidebar-header
         @save="save"
-        @remove="remove"
+        @remove="this.delete"
       />
       <sidebar-body
-        :design="currentSelected.design"
-        :initial="selected"
+        :parent="currentSelected.parent"
+        :initial="currentSelected.value"
         :path="currentSelected.path"
         @update="update"
+        @remove="remove"
+        @error="error"
         ref="body"
       />
     </div>
-    <div v-else-if="!isSelected" class="placeholder">
-      <h4>Outline Sidebar</h4>
-      <div class="mdi mdi-arrow-left"></div>
+    <div v-else-if="selectedIsCollection" class="placeholder">
+      <h4>Collection</h4>
+      <div class="divider"></div>
       <div class="helper">
-        Please select an object on the left to view and edit its details
-        here.
+        You selected a collection. Please select one of its items to view and
+        edit item details here.
       </div>
     </div>
     <div v-else class="placeholder">
       <h4>Outline Sidebar</h4>
-      <div class="mdi mdi-arrow-left"></div>
+      <div class="mdi mdi-arrow-left" />
       <div class="helper">
         Please create your first Schema on the left to view and edit its details
         here.
@@ -33,12 +35,10 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
-import set from 'lodash/set';
-import unset from 'lodash/unset';
 import isEmpty from 'lodash/isEmpty';
-import Header from './Header.vue';
-import Body from './Body.vue';
+import { getType } from 'utils/schemaDesign';
+import Header from './Header';
+import Body from './Body';
 
 export default {
   props: {
@@ -46,30 +46,26 @@ export default {
     currentSelected: { type: Object, default: {} },
   },
   computed: {
-    selected() { return cloneDeep(this.currentSelected.value || {}); },
-    isSelected() { return !isEmpty(this.currentSelected); }
+    isSelected() { return !isEmpty(this.currentSelected); },
+    selectedIsCollection() {
+      return (getType(this.currentSelected.design) === 'array');
+    }
   },
   methods: {
-    update(property, value) {
-      this.selected[property] = value;
+    update(path, item) {
+      this.$emit('update', path, item);
+    },
+    remove(path) {
+      this.$emit('remove', path);
+    },
+    error(message) {
+      this.$emit('error', message);
     },
     save() {
-      this.$refs.body.validateAll()
-        .then((result) => {
-          if (!result) return;
-          this.$emit(
-            'save',
-            schemas => set(schemas, this.currentSelected.path, this.selected)
-          );
-        });
+      this.$refs.body.save();
     },
-    remove() {
-      this.$emit(
-        'save',
-        schemas => {
-          unset(schemas, this.currentSelected.path);
-        }
-      );
+    delete() {
+      this.$refs.body.delete();
     }
   },
   components: {
@@ -106,6 +102,12 @@ export default {
     float: left;
     padding: 5px 20px 5px 12px;
     font-size: 20px;
+  }
+
+  .divider {
+    float: left;
+    width: 52px;
+    height: 50px;
   }
 
   .helper {

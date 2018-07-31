@@ -4,7 +4,7 @@
       :value="value"
       :class="position"
       v-bind="options"
-      @input="val => $emit('input', val)"
+      @input="input"
       @close="close"
       @open="open">
     </multiselect>
@@ -49,6 +49,9 @@ export default {
     }
   },
   methods: {
+    input(val) {
+      if (val) this.$emit('input', val);
+    },
     open(val, id) {
       this.isOpen = true;
       this.$emit('open', val, id);

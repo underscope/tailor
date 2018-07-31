@@ -41,8 +41,8 @@ function wrapConfigMethods() {
     .forEach(value => {
       if (typeof value !== 'function') return;
       if (excludedMethods.includes(value.name)) return;
-      function wrapedMethod() { return value; }
-      Object.defineProperty(wrapedMethod, 'name', { value: value.name });
-      getter(wrapedMethod);
+      function wrappedMethod() { return value; }
+      Object.defineProperty(wrappedMethod, 'name', { value: value.name });
+      getter(wrappedMethod);
     });
 }

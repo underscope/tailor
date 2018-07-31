@@ -14,7 +14,7 @@
         :ref="meta.key"
         :name="meta.key"
         :placeholder="meta.placeholder"
-        @input="externValidate"
+        @input="input"
         @keyup.enter="focusoutInput"
         class="form-control">
       <span class="help-block">{{ vErrors.first(meta.key) }}</span>
@@ -51,10 +51,11 @@ export default {
         this.$emit('update', this.meta.key, this.value);
       });
     },
-    externValidate() {
-      if (!this.meta.validate) {
-        this.$emit('validate', this.meta.key, this.value);
-      }
+    input() {
+      this.$emit('input', this.meta.key, this.value);
+    },
+    clearValue() {
+      this.value = '';
     }
   },
   updated() {

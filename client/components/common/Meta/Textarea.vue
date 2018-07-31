@@ -14,7 +14,7 @@
         :placeholder="meta.placeholder"
         @keydown.enter="onEnter"
         @keydown.esc="editing = false"
-        @input="externValidate"
+        @input="input"
         class="form-control">
       </textarea>
       <div :style="previewStyle" @mousedown.stop="focusTextarea" class="content">
@@ -64,10 +64,11 @@ export default {
         this.$emit('update', this.meta.key, this.value);
       });
     },
-    externValidate() {
-      if (!this.meta.validate) {
-        this.$emit('validate', this.meta.key, this.value);
-      }
+    input() {
+      this.$emit('input', this.meta.key, this.value);
+    },
+    clearValue() {
+      this.value = '';
     }
   }
 };
