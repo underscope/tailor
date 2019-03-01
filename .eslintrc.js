@@ -2,6 +2,9 @@ const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
   root: true,
+  env: {
+    node: true
+  },
   parserOptions: {
     parser: "babel-eslint",
     sourceType: 'module'
@@ -14,6 +17,8 @@ module.exports = {
   // required to lint *.vue files
   plugins: ['vue'],
   rules: {
+    // 'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    // 'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
     indent: ['error', 2, {
       SwitchCase: 1,
       // NOTE: Consistent indentation IS enforced;

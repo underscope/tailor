@@ -18,6 +18,8 @@ selenium-debug.log
 
 # Configuration
 .env
+.env.local
+.env.*.local
 ecosystem.config.js
 .*rc*
 !.eslintrc*
