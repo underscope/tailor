@@ -30,7 +30,8 @@
             :pinned="courseUser && courseUser.pinned"
             :schema="getSchema(schema)"
             @pin="state => pin({ id: repository.id, pin: state })"
-            @open="open(repository)"/>
+            @open="open(repository)"
+            @open:settings="open(repository, 'course-info')"/>
         </v-flex>
       </v-layout>
       <infinite-loading ref="loader" @infinite="load">
@@ -110,11 +111,9 @@ export default {
         this.loading = false;
       });
     },
-    open({ id }) {
-      this.$router.push({
-        name: 'course',
-        params: { courseId: id }
-      });
+    open({ id }, name = 'course') {
+      const params = { courseId: id };
+      this.$router.push({ name, params });
     }
   },
   watch: {

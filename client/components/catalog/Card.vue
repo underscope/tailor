@@ -1,10 +1,20 @@
 <template>
   <v-card @click="navigateTo" class="repository-card">
     <div class="card-heading blue-grey darken-4">
-      <v-chip :color="data.color" small label class="ml-3 mr-0"/>
-      <v-chip color="grey lighten-3" small label class="ml-0">
-        {{ schema.name }}
-      </v-chip>
+      <div class="layout align-center">
+        <v-chip :color="data.color" small label class="ml-3"/>
+        <v-chip color="grey lighten-3" small label class="ml-0">
+          {{ schema.name }}
+        </v-chip>
+        <v-btn
+          @click.stop="$emit('open:settings')"
+          flat
+          icon
+          color="grey"
+          class="btn-settings text--darken-1 ml-auto my-0">
+          <v-icon>mdi-settings</v-icon>
+        </v-btn>
+      </div>
       <v-card-title class="headline grey--text text--lighten-4 pt-1">
         {{ name | truncate(70) }}
       </v-card-title>
